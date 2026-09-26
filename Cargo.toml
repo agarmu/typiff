@@ -1,0 +1,22 @@
+[package]
+name = "typiff-plugin"
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+description = "Date/Time handling in typst (wrapper for `jiff` package)"
+publish = false
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+jiff = { version = "0.2.37", features = ["static"]}
+serde_json = "1.0.151"
+wasm-minimal-protocol = "0.2.1"
+
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = "s"
+panic = "abort"
+strip = true
