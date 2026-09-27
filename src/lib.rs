@@ -5,6 +5,9 @@
 //! local time and timezone data. Invalid UTF-8, parsing failures, and response
 //! encoding failures return human-readable errors.
 
+#[cfg(test)]
+mod tests;
+
 use jiff::{
     Span, Timestamp, Zoned,
     civil::{Date, DateTime, Time},

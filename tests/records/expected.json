@@ -1,0 +1,108 @@
+[
+  {
+    "name": "leap-day",
+    "kind": "date",
+    "input": "2024-02-29",
+    "expected": {
+      "text": "2024-02-29",
+      "year": 2024,
+      "month": 2,
+      "day": 29,
+      "weekday": "thursday",
+      "day-of-year": 60
+    }
+  },
+  {
+    "name": "fractional-time",
+    "kind": "time",
+    "input": "15:04:05.123",
+    "expected": {
+      "text": "15:04:05.123",
+      "hour": 15,
+      "minute": 4,
+      "second": 5,
+      "nanosecond": 123000000
+    }
+  },
+  {
+    "name": "civil-datetime",
+    "kind": "datetime",
+    "input": "1970-01-01T00:00:00",
+    "expected": {
+      "text": "1970-01-01T00:00:00",
+      "year": 1970,
+      "month": 1,
+      "day": 1,
+      "weekday": "thursday",
+      "day-of-year": 1,
+      "hour": 0,
+      "minute": 0,
+      "second": 0,
+      "nanosecond": 0
+    }
+  },
+  {
+    "name": "negative-fractional-epoch",
+    "kind": "timestamp",
+    "input": "1969-12-31T23:59:58.75Z",
+    "expected": {
+      "text": "1969-12-31T23:59:58.75Z",
+      "epoch": {
+        "seconds": -2,
+        "nanosecond": 750000000
+      },
+      "year": 1969,
+      "month": 12,
+      "day": 31,
+      "weekday": "wednesday",
+      "day-of-year": 365,
+      "hour": 23,
+      "minute": 59,
+      "second": 58,
+      "nanosecond": 750000000
+    }
+  },
+  {
+    "name": "named-zone-and-nested-timestamp",
+    "kind": "zoned",
+    "input": "2024-07-10T21:14:00-04:00[America/New_York]",
+    "expected": {
+      "text": "2024-07-10T21:14:00-04:00[America/New_York]",
+      "zone": "America/New_York",
+      "offset": "-04",
+      "year": 2024,
+      "month": 7,
+      "day": 10,
+      "weekday": "wednesday",
+      "day-of-year": 192,
+      "hour": 21,
+      "minute": 14,
+      "second": 0,
+      "nanosecond": 0,
+      "timestamp": {
+        "text": "2024-07-11T01:14:00Z",
+        "epoch": {
+          "seconds": 1720660440,
+          "nanosecond": 0
+        },
+        "year": 2024,
+        "month": 7,
+        "day": 11,
+        "weekday": "thursday",
+        "day-of-year": 193,
+        "hour": 1,
+        "minute": 14,
+        "second": 0,
+        "nanosecond": 0
+      }
+    }
+  },
+  {
+    "name": "calendar-span",
+    "kind": "span",
+    "input": "P1Y2M3DT4H5M6S",
+    "expected": {
+      "text": "P1Y2M3DT4H5M6S"
+    }
+  }
+]
