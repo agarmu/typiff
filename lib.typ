@@ -7,11 +7,19 @@
 /// #to-datetime(date).display("[weekday repr:long]")
 /// ```
 /// #test(`eq(parse-date("2024-02-29").day-of-year, 60)`)
-/// -> (
-///   text: str,
-///   year: int, month: int, day: int,
-///   weekday: str, day-of-year: int,
+///
+/// *Returned fields*
+/// #table(
+///   columns: (1fr, auto),
+///   align: left,
+///   inset: 6pt,
+///   table.header([*Field*], [*Type*]),
+///   [`text`], [`str`],
+///   [`year`, `month`, `day`], [`int`],
+///   [`weekday`], [`str`],
+///   [`day-of-year`], [`int`],
 /// )
+/// -> dictionary
 #let parse-date(
   /// Date text.
   /// -> str
@@ -27,10 +35,17 @@
 /// #parse-time("15:04:05.123456789").nanosecond
 /// ```
 /// #test(`eq(parse-time("15:04:05.123456789").nanosecond, 123456789)`)
-/// -> (
-///   text: str,
-///   hour: int, minute: int, second: int, nanosecond: int,
+///
+/// *Returned fields*
+/// #table(
+///   columns: (1fr, auto),
+///   align: left,
+///   inset: 6pt,
+///   table.header([*Field*], [*Type*]),
+///   [`text`], [`str`],
+///   [`hour`, `minute`, `second`, `nanosecond`], [`int`],
 /// )
+/// -> dictionary
 #let parse-time(
   /// Time text.
   /// -> str
@@ -41,17 +56,26 @@
 }
 
 /// Parse a date and time without a timezone.
+/// Any offset or timezone in the input is discarded without converting the time.
 ///
 /// ```example
 /// #parse-datetime("2024-07-11T01:14:00").text
 /// ```
 /// #test(`eq(parse-datetime("2024-07-11T01:14:00").hour, 1)`)
-/// -> (
-///   text: str,
-///   year: int, month: int, day: int,
-///   weekday: str, day-of-year: int,
-///   hour: int, minute: int, second: int, nanosecond: int,
+///
+/// *Returned fields*
+/// #table(
+///   columns: (1fr, auto),
+///   align: left,
+///   inset: 6pt,
+///   table.header([*Field*], [*Type*]),
+///   [`text`], [`str`],
+///   [`year`, `month`, `day`], [`int`],
+///   [`weekday`], [`str`],
+///   [`day-of-year`], [`int`],
+///   [`hour`, `minute`, `second`, `nanosecond`], [`int`],
 /// )
+/// -> dictionary
 #let parse-datetime(
   /// Date and time text.
   /// -> str
@@ -68,13 +92,21 @@
 /// #parse-timestamp("2024-07-10T21:14:00-04:00").text
 /// ```
 /// #test(`eq(parse-timestamp("1969-12-31T23:59:58.75Z").epoch, (seconds: -2, nanosecond: 750000000))`)
-/// -> (
-///   text: str,
-///   year: int, month: int, day: int,
-///   weekday: str, day-of-year: int,
-///   hour: int, minute: int, second: int, nanosecond: int,
-///   epoch: (seconds: int, nanosecond: int),
+///
+/// *Returned fields*
+/// #table(
+///   columns: (1fr, auto),
+///   align: left,
+///   inset: 6pt,
+///   table.header([*Field*], [*Type*]),
+///   [`text`], [`str`],
+///   [`year`, `month`, `day`], [`int`],
+///   [`weekday`], [`str`],
+///   [`day-of-year`], [`int`],
+///   [`hour`, `minute`, `second`, `nanosecond`], [`int`],
+///   [`epoch.seconds`, `epoch.nanosecond`], [`int`],
 /// )
+/// -> dictionary
 #let parse-timestamp(
   /// Date and time with `Z` or a numeric UTC offset.
   /// -> str
@@ -96,19 +128,24 @@
 /// #meeting.timestamp.text
 /// ```
 /// #test(`eq(parse-zoned("2024-01-01T12:00:00+05:30[+05:30]").zone, none)`)
-/// -> (
-///   text: str, zone: str or none, offset: str,
-///   year: int, month: int, day: int,
-///   weekday: str, day-of-year: int,
-///   hour: int, minute: int, second: int, nanosecond: int,
-///   timestamp: (
-///     text: str,
-///     year: int, month: int, day: int,
-///     weekday: str, day-of-year: int,
-///     hour: int, minute: int, second: int, nanosecond: int,
-///     epoch: (seconds: int, nanosecond: int),
-///   ),
+///
+/// *Returned fields*
+/// #table(
+///   columns: (1fr, auto),
+///   align: left,
+///   inset: 6pt,
+///   table.header([*Field*], [*Type*]),
+///   [`text`], [`str`],
+///   [`zone`], [`str` or `none`],
+///   [`offset`], [`str`],
+///   [`year`, `month`, `day`], [`int`],
+///   [`weekday`], [`str`],
+///   [`day-of-year`], [`int`],
+///   [`hour`, `minute`, `second`, `nanosecond`], [`int`],
+///   [`timestamp`], [`dictionary`],
 /// )
+/// The nested `timestamp` has the same fields as the dictionary returned by `parse-timestamp`.
+/// -> dictionary
 #let parse-zoned(
   /// Date and time with a bracketed timezone.
   /// -> str
@@ -121,12 +158,23 @@
 /// Parse a calendar span.
 ///
 /// ```example
-/// #parse-span("P1Y2M3DT4H5M6S").text
+/// #let span = parse-span("P1Y2M3DT4H5M6S")
+/// #span.years years, #span.months months, #span.days days
 /// ```
 /// #test(`eq(parse-span("-P1DT2H").text, "-P1DT2H")`)
-/// -> (
-///   text: str,
+///
+/// *Returned fields*
+/// #table(
+///   columns: (1fr, auto),
+///   align: left,
+///   inset: 6pt,
+///   table.header([*Field*], [*Type*]),
+///   [`text`], [`str`],
+///   [`years`, `months`, `weeks`, `days`], [`int`],
+///   [`hours`, `minutes`, `seconds`], [`int`],
+///   [`milliseconds`, `microseconds`, `nanoseconds`], [`int`],
 /// )
+/// -> dictionary
 #let parse-span(
   /// Span text.
   /// -> str

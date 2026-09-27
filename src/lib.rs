@@ -108,7 +108,19 @@ pub fn parse_zoned(input: &[u8]) -> PluginResult {
 #[cfg_attr(target_arch = "wasm32", wasm_func)]
 pub fn parse_span(input: &[u8]) -> PluginResult {
     let value: Span = parse_raw(input, "span")?;
-    response(json!({ "text": value.to_string() }))
+    response(json!({
+        "text": value.to_string(),
+        "years": value.get_years(),
+        "months": value.get_months(),
+        "weeks": value.get_weeks(),
+        "days": value.get_days(),
+        "hours": value.get_hours(),
+        "minutes": value.get_minutes(),
+        "seconds": value.get_seconds(),
+        "milliseconds": value.get_milliseconds(),
+        "microseconds": value.get_microseconds(),
+        "nanoseconds": value.get_nanoseconds(),
+    }))
 }
 
 fn populate_date_fields(record: &mut Value, date: Date) {

@@ -79,3 +79,19 @@ fn daylight_saving_overlap_offsets_select_distinct_instants() {
         3600
     );
 }
+
+#[test]
+fn span_records_match_component_fixtures() {
+    let cases: Value =
+        serde_json::from_str(include_str!("../tests/records/expected.json")).unwrap();
+    for case in cases.as_array().unwrap() {
+        if case["kind"] == "span" {
+            assert_eq!(
+                parsed("span", case["input"].as_str().unwrap()),
+                case["expected"],
+                "{}",
+                case["name"]
+            );
+        }
+    }
+}

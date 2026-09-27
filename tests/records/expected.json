@@ -102,7 +102,89 @@
     "kind": "span",
     "input": "P1Y2M3DT4H5M6S",
     "expected": {
-      "text": "P1Y2M3DT4H5M6S"
+      "text": "P1Y2M3DT4H5M6S",
+      "years": 1,
+      "months": 2,
+      "weeks": 0,
+      "days": 3,
+      "hours": 4,
+      "minutes": 5,
+      "seconds": 6,
+      "milliseconds": 0,
+      "microseconds": 0,
+      "nanoseconds": 0
+    }
+  },
+  {
+    "name": "negative-fractional-span",
+    "kind": "span",
+    "input": "-P1DT2H3.123456789S",
+    "expected": {
+      "text": "-P1DT2H3.123456789S",
+      "years": 0,
+      "months": 0,
+      "weeks": 0,
+      "days": -1,
+      "hours": -2,
+      "minutes": 0,
+      "seconds": -3,
+      "milliseconds": -123,
+      "microseconds": -456,
+      "nanoseconds": -789
+    }
+  },
+  {
+    "name": "zero-span",
+    "kind": "span",
+    "input": "PT0S",
+    "expected": {
+      "text": "PT0S",
+      "years": 0,
+      "months": 0,
+      "weeks": 0,
+      "days": 0,
+      "hours": 0,
+      "minutes": 0,
+      "seconds": 0,
+      "milliseconds": 0,
+      "microseconds": 0,
+      "nanoseconds": 0
+    }
+  },
+  {
+    "name": "week-span",
+    "kind": "span",
+    "input": "P2W",
+    "expected": {
+      "text": "P2W",
+      "years": 0,
+      "months": 0,
+      "weeks": 2,
+      "days": 0,
+      "hours": 0,
+      "minutes": 0,
+      "seconds": 0,
+      "milliseconds": 0,
+      "microseconds": 0,
+      "nanoseconds": 0
+    }
+  },
+  {
+    "name": "unbalanced-span",
+    "kind": "span",
+    "input": "PT90M",
+    "expected": {
+      "text": "PT90M",
+      "years": 0,
+      "months": 0,
+      "weeks": 0,
+      "days": 0,
+      "hours": 0,
+      "minutes": 90,
+      "seconds": 0,
+      "milliseconds": 0,
+      "microseconds": 0,
+      "nanoseconds": 0
     }
   }
 ]

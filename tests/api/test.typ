@@ -28,6 +28,11 @@
 
   let span = parse-span("P1Y2M3DT4H5M6S")
   assert.eq(span.text, "P1Y2M3DT4H5M6S")
+  assert.eq((span.years, span.months, span.days, span.hours, span.minutes, span.seconds), (1, 2, 3, 4, 5, 6))
+  assert.eq(parse-span("-P1DT2H").days, -1)
+  assert.eq(parse-span("-P1DT2H").hours, -2)
+  assert.eq(parse-span("P2W").weeks, 2)
+  assert.eq(parse-span("PT90M").minutes, 90)
 
   assert.eq(to-datetime(parse-date("2024-02-29")), datetime(year: 2024, month: 2, day: 29))
   assert.eq(to-datetime(parse-time("15:04:05")), datetime(hour: 15, minute: 4, second: 5))
@@ -115,7 +120,7 @@
     (dt, date-fields + time-fields),
     (timestamp, date-fields + time-fields + ("epoch",)),
     (zoned, date-fields + time-fields + ("timestamp", "zone", "offset")),
-    (span, ()),
+    (span, ("years", "months", "weeks", "days", "hours", "minutes", "seconds", "milliseconds", "microseconds", "nanoseconds")),
   ) {
     assert.eq(result.keys().sorted(), (("text",) + fields).sorted())
     assert.eq(type(result.text), str)
@@ -134,7 +139,7 @@
   assert.eq(to-datetime(zoned, clock: "utc"), to-datetime(zoned.timestamp))
   assert.eq(to-datetime(timestamp, clock: "utc"), to-datetime(timestamp))
   assert.eq(before-epoch.epoch, (seconds: -2, nanosecond: 750000000))
-  assert.eq(parse-span("P1M"), (text: "P1M"))
+  assert.eq(parse-span("P1M").months, 1)
   assert.eq(date.day-of-year, 60)
   assert.eq(to-datetime(date).display("[weekday repr:long]"), "Thursday")
   assert.eq(to-datetime(zoned, clock: "local").display("[hour]:[minute]"), "21:14")
