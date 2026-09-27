@@ -2,24 +2,26 @@
 
 .PHONY: build test test-bundled docs fmt lint check clean
 
-build:
+build: plugin.wasm
+
+plugin.wasm: Cargo.toml Cargo.lock Makefile $(shell find src -type f) $(wildcard build.rs .cargo/config .cargo/config.toml rust-toolchain rust-toolchain.toml)
 	cargo build --locked --release --target wasm32-unknown-unknown
 	wasm-tools validate target/wasm32-unknown-unknown/release/typiff_plugin.wasm
 	cp target/wasm32-unknown-unknown/release/typiff_plugin.wasm plugin.wasm
 
-test: build
+test: plugin.wasm
 	wasm-tools validate plugin.wasm
 	cargo test --locked
 	tt run --no-fail-fast --no-export-ephemeral
 
-docs: build
+docs: plugin.wasm
 	mkdir -p target/docs
 	typst compile --root . docs/manual.typ target/docs/typiff.pdf
 
 fmt:
 	cargo fmt --check
 
-lint: build
+lint: plugin.wasm
 	cargo clippy --locked --all-targets -- -D warnings
 	cargo clippy --locked --target wasm32-unknown-unknown -- -D warnings
 	tinymist lint --root . lib.typ

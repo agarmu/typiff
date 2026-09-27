@@ -1,0 +1,62 @@
+name: Set up build environment
+description: Install Rust, cache prebuilt tools, and install documentation fonts.
+runs:
+  using: composite
+  steps:
+    - name: Install Rust toolchain
+      shell: bash
+      run: |
+        rustup update stable --no-self-update
+        rustup default stable
+        rustup target add wasm32-unknown-unknown
+        rustup component add rustfmt clippy
+
+    - uses: Swatinem/rust-cache@v2
+
+    - name: Cache installed tools
+      id: tools
+      uses: actions/cache@v4
+      with:
+        path: ~/.local/share/typiff-tools
+        key: ${{ runner.os }}-${{ runner.arch }}-binaries-wasm-1.258.0-typst-0.15.1-tytanic-0.4.1-tinymist-0.15.8
+
+    - name: Install binary installer
+      if: steps.tools.outputs.cache-hit != 'true'
+      uses: taiki-e/install-action@v2
+      with:
+        tool: cargo-binstall@1.23.0
+        fallback: none
+
+    - name: Install prebuilt tools
+      if: steps.tools.outputs.cache-hit != 'true'
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      run: |
+        cargo binstall --no-confirm --disable-strategies compile \
+          --root "$HOME/.local/share/typiff-tools" \
+          wasm-tools@1.258.0 typst-cli@0.15.1 tytanic@0.4.1
+
+    # The published Tinymist crate has no installable binary; use its release asset.
+    - name: Install prebuilt Tinymist
+      if: steps.tools.outputs.cache-hit != 'true'
+      shell: bash
+      run: |
+        curl --fail --location --retry 3 \
+          https://github.com/Myriad-Dreamin/tinymist/releases/download/v0.15.8/tinymist-x86_64-unknown-linux-musl.tar.gz \
+          --output "$RUNNER_TEMP/tinymist.tar.gz"
+        mkdir -p "$RUNNER_TEMP/tinymist" "$HOME/.local/share/typiff-tools/bin"
+        tar -xzf "$RUNNER_TEMP/tinymist.tar.gz" -C "$RUNNER_TEMP/tinymist"
+        tinymist_binary=$(find "$RUNNER_TEMP/tinymist" -type f -name tinymist)
+        install -m 755 "$tinymist_binary" "$HOME/.local/share/typiff-tools/bin/tinymist"
+        "$HOME/.local/share/typiff-tools/bin/tinymist" --version
+
+    - name: Add tools to PATH
+      shell: bash
+      run: echo "$HOME/.local/share/typiff-tools/bin" >> "$GITHUB_PATH"
+
+    - name: Install documentation font
+      shell: bash
+      run: |
+        sudo apt-get update
+        sudo apt-get install --yes fonts-inconsolata

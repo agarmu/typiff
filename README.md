@@ -13,7 +13,7 @@ Here is a small example:
 #to-datetime(date).display("[day] [month repr:long] [year]")
 ```
 
-See the [manual](docs/manual.typ) for more detailed documentation.
+See the [manual](docs/manual.typ) for more detailed documentation (you can also look at the most recent GitHub Release).
 
 ## Development
 
